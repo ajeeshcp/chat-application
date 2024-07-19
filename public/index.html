@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Application</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="chat">
+    <h3>Group chat</h3>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <h3 style="margin-top: 100px;">Individual chat</h3>
+    <ul id="messages-ind"></ul>
+    <form id="form-ind" action="">
+      <input id="input-ind" autocomplete="off" /><button>Send</button>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:3000');
+
+    // Assuming groupId and userId are obtained after user logs in and joins a group
+    const groupId = '1'; 
+    const userId = '1'; 
+    
+    socket.emit('joinGroup', groupId);
+
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input.value) {
+        const messageData = {
+          groupId: groupId,
+          userId: userId,
+          content: input.value
+        };
+        socket.emit('sendMessage', messageData);
+        input.value = '';
+      }
+    });
+
+    socket.on('message', function(message) {
+      const item = document.createElement('li');
+      item.textContent = message.content;
+      document.getElementById('messages').appendChild(item);
+    });
+
+    const formInd = document.getElementById('form-ind');
+    const inputInd = document.getElementById('input-ind');
+    formInd.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if (inputInd.value) {
+        sendIndividualMessage('1', inputInd.value)
+        inputInd.value = '';
+      }
+    });
+
+    function sendIndividualMessage(receiverId, content) {
+      const messageData = {
+        senderId: '2',
+        receiverId: receiverId,
+        content: content
+      };
+      socket.emit('sendIndividualMessage', messageData);
+    }
+
+    socket.on('individualMessage', function(message) {
+      const item = document.createElement('li');
+      item.textContent = `From ${message.senderId}: ${message.content}`;
+      document.getElementById('messages-ind').appendChild(item);
+    });
+  </script>
+</body>
+</html>
