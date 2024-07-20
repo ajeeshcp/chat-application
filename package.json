@@ -6,7 +6,16 @@
     "test": "jest"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "reporters": [
+      "default",
+      ["jest-html-reporter", {
+        "pageTitle": "Test Report",
+        "outputPath": "test-report.html",
+        "includeFailureMsg": true,
+        "includeSuiteFailure": true
+      }]
+    ]
   },
   "author": "Ajeesh",
   "license": "ISC",
@@ -19,10 +28,12 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
     "sequelize": "^6.37.3",
+    "sequelize-mock": "^0.10.2",
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "jest-html-reporter": "^3.10.2",
     "supertest": "^7.0.0"
   }
 }

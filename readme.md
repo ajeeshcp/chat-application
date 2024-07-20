@@ -26,7 +26,7 @@ This repository contains a chat application built with Node.js, Express, and Pos
 3. **Install the necessary packages**
 
     ```bash
-    npm install express pg sequelize socket.io bcryptjs jsonwebtoken
+    npm install 
     npm install --save-dev jest supertest
     ```
 
